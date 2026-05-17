@@ -28,20 +28,18 @@ class AuthState {
   }
 }
 
-class AuthNotifier extends StateNotifier<AuthState> {
-  final SecureStorage _storage;
+class AuthNotifier extends Notifier<AuthState> {
+  @override
+  AuthState build() => const AuthState();
 
-  AuthNotifier(this._storage) : super(const AuthState());
+  SecureStorage get _storage => ref.read(secureStorageProvider);
 
   Future<void> login(String email, String password) async {
     state = state.copyWith(status: AuthStatus.authenticating, error: null);
 
     try {
-      // Simulate network delay
       await Future.delayed(const Duration(seconds: 1));
 
-      // In production, replace with real API call
-      // For now, accept any valid credentials
       final token = _generateToken(email);
 
       await _storage.write(AppConstants.tokenKey, token);
@@ -84,48 +82,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> signInWithGoogle() async {
-    state = state.copyWith(status: AuthStatus.authenticating, error: null);
-
-    try {
-      // TODO: Implement Google Sign-In
-      // final googleUser = await GoogleSignIn().signIn();
-      // if (googleUser != null) { ... }
-      await Future.delayed(const Duration(seconds: 1));
-
-      state = state.copyWith(
-        status: AuthStatus.authenticated,
-        email: 'user@gmail.com',
-        error: null,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        status: AuthStatus.error,
-        error: 'Google sign-in failed.',
-      );
-    }
-  }
-
-  Future<void> signInWithApple() async {
-    state = state.copyWith(status: AuthStatus.authenticating, error: null);
-
-    try {
-      // TODO: Implement Apple Sign-In
-      await Future.delayed(const Duration(seconds: 1));
-
-      state = state.copyWith(
-        status: AuthStatus.authenticated,
-        email: 'user@icloud.com',
-        error: null,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        status: AuthStatus.error,
-        error: 'Apple sign-in failed.',
-      );
-    }
-  }
-
   Future<void> checkAuthStatus() async {
     final token = await _storage.read(AppConstants.tokenKey);
     final email = await _storage.read(AppConstants.userKey);
@@ -155,7 +111,4 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  final storage = ref.watch(secureStorageProvider);
-  return AuthNotifier(storage);
-});
+final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);

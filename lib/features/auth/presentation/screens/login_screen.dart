@@ -134,53 +134,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         : const Text('Sign In'),
                   ),
                 ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    const Expanded(child: Divider()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'or continue with',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.5),
-                        ),
-                      ),
-                    ),
-                    const Expanded(child: Divider()),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _SocialButton(
-                        icon: 'assets/google_logo.png',
-                        label: 'Google',
-                        onPressed: () => ref
-                            .read(authProvider.notifier)
-                            .signInWithGoogle(),
-                        iconWidget: const Icon(Icons.g_mobiledata_rounded,
-                            size: 32),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _SocialButton(
-                        icon: 'assets/apple_logo.png',
-                        label: 'Apple',
-                        onPressed: () => ref
-                            .read(authProvider.notifier)
-                            .signInWithApple(),
-                        iconWidget: const Icon(Icons.apple, size: 32),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 40),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -218,46 +172,5 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _passwordController.text,
           );
     }
-  }
-}
-
-class _SocialButton extends StatelessWidget {
-  final String icon;
-  final String label;
-  final VoidCallback onPressed;
-  final Widget iconWidget;
-
-  const _SocialButton({
-    required this.icon,
-    required this.label,
-    required this.onPressed,
-    required this.iconWidget,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(0, 56),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          iconWidget,
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
   }
 }

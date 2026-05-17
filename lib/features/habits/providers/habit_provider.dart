@@ -10,20 +10,22 @@ final habitBoxProvider = Provider<Box<Habit>>((ref) {
   return Hive.box<Habit>(AppConstants.habitsBox);
 });
 
-final habitProvider = StateNotifierProvider<HabitNotifier, List<Habit>>((ref) {
-  final box = ref.watch(habitBoxProvider);
-  return HabitNotifier(box);
-});
+final habitProvider = NotifierProvider<HabitNotifier, List<Habit>>(HabitNotifier.new);
 
-class HabitNotifier extends StateNotifier<List<Habit>> {
-  final Box<Habit> _box;
+class HabitNotifier extends Notifier<List<Habit>> {
   final Uuid _uuid = const Uuid();
   StreamSubscription<BoxEvent>? _subscription;
 
-  HabitNotifier(this._box) : super(_box.values.toList()..sort(_compareHabits)) {
-    _subscription = _box.watch().listen((event) {
-      state = _box.values.toList()..sort(_compareHabits);
+  Box<Habit> get _box => ref.read(habitBoxProvider);
+
+  @override
+  List<Habit> build() {
+    final box = _box;
+    final habits = box.values.toList()..sort(_compareHabits);
+    _subscription = box.watch().listen((event) {
+      state = box.values.toList()..sort(_compareHabits);
     });
+    return habits;
   }
 
   @override
