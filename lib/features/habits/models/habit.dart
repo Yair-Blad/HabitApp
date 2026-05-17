@@ -28,12 +28,27 @@ class Habit extends HiveObject {
   }) : completedDates = completedDates ?? [];
 
   bool isCompletedToday() {
-    String today = DateTime.now().toIso8601String().split('T')[0];
+    final today = DateTime.now().toIso8601String().split('T').first;
     return completedDates.contains(today);
   }
 
+  int get streak {
+    var count = 0;
+    final today = DateTime.now();
+    for (var i = 0; i < 365; i++) {
+      final date = today.subtract(Duration(days: i));
+      final dateStr = date.toIso8601String().split('T').first;
+      if (completedDates.contains(dateStr)) {
+        count++;
+      } else {
+        break;
+      }
+    }
+    return count;
+  }
+
   void toggleToday() {
-    String today = DateTime.now().toIso8601String().split('T')[0];
+    final today = DateTime.now().toIso8601String().split('T').first;
     if (completedDates.contains(today)) {
       completedDates.remove(today);
     } else {

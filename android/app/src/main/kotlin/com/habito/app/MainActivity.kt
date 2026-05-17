@@ -1,4 +1,4 @@
-package com.example.prueba
+package com.habito.app
 
 import io.flutter.embedding.android.FlutterActivity
 
